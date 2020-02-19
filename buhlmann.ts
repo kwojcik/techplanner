@@ -110,6 +110,9 @@ const he2Bs: BValue[] = [
 ];
 
 const pwater: Pressure = 0.063;
+//const barMSW: Pressure = 0.100693064;
+const barMSW: Pressure = 0.1;
+const ATM: Pressure = 1;
 
 function calcPIGT({
   pigtt0,
@@ -119,7 +122,7 @@ function calcPIGT({
 }: {
   pigtt0: Pressure;
   piig: Pressure;
-  t: Time;
+  t: Minute;
   ht: HalfTime;
 }): Pressure {
   return (
@@ -128,8 +131,9 @@ function calcPIGT({
   );
 }
 
+type DepthChangeRate = number;
 type HalfTime = number;
-type Time = number;
+type Minute = number;
 type Depth = number;
 type Pressure = number;
 type AValue = number;
@@ -150,7 +154,7 @@ class Compartment {
     this.num = num;
   }
 
-  expose(gas: BreathingGas, t: Time): void {
+  expose(gas: BreathingGas, t: Minute): void {
     this.pn2 = calcPIGT({
       pigtt0: this.pn2,
       piig: gas.pn2 + pwater,
@@ -183,25 +187,58 @@ class Compartment {
       (this.phe2 + this.pn2)
     );
   }
+
+  get depthTolerated(): Depth {
+    return (this.pat - ATM) / barMSW;
+  }
 }
-const compartments: Compartment[] = [];
-for (let i = 0; i < 16; i++) {
-  compartments.push(new Compartment(0.75, 0, i));
+
+type Profile = { depth: Depth; t: Minute }[];
+class Diver {
+  compartments: Compartment[] = [];
+
+  constructor(pn2: Pressure, phe2: Pressure) {
+    for (let i = 0; i < 16; i++) {
+      this.compartments.push(new Compartment(pn2, phe2, i));
+    }
+  }
+  expose(profile: Profile) {
+    for (let i = 0; i < profile.length; i++) {
+      this.compartments.forEach(c => c.expose(this.currentGas, profile[i].t));
+    }
+  }
+  get currentGas() {
+    return {
+      pn2: 0.75,
+      phe2: 2.36
+    };
+  }
+  get shallowestToleratedDepth(): Depth {
+    let shallowestToleratedDepth: Depth = Infinity;
+    for (let i = 0; i < this.compartments.length; i++) {
+      if (shallowestToleratedDepth > this.compartments[i].depthTolerated) {
+        shallowestToleratedDepth = this.compartments[i].depthTolerated;
+      }
+    }
+    return shallowestToleratedDepth;
+  }
 }
-const bGas: BreathingGas = {
-  pn2: 0.75,
-  phe2: 2.36
-};
-for (let i = 0; i < compartments.length; i++) {
-  compartments[i].expose(bGas, 60);
-}
+
+const profile = [{ depth: 21.1, t: 60 }];
+
+//const tDelta: Minute = 1.0 / 60; // 1 second
+//const ascentRate: DepthChangeRate = 10; // 10 meters/minute
+//const descentRate: DepthChangeRate = 10; // 10 meters/minute
+
+const diver = new Diver(0.75, 0);
+diver.expose(profile);
 
 const compartmentsToSimulate: CompartmentNumber[] = [4, 5, 6, 7];
 const pigtpartials = [];
 const pats = [];
 const pigts = [];
 for (let i = 0; i < compartmentsToSimulate.length; i++) {
-  const c = compartments[compartmentsToSimulate[i]];
+  const c = diver.compartments[compartmentsToSimulate[i]];
   pigtpartials.push({ n2: c.pn2, he2: c.phe2 });
   pats.push(c.pat);
   pigts.push(c.pigt);
