@@ -204,13 +204,18 @@ class Diver {
   }
   expose(profile: Profile) {
     for (let i = 0; i < profile.length; i++) {
-      this.compartments.forEach(c => c.expose(this.currentGas, profile[i].t));
+      const currentStep = profile[i];
+      const gasAtPressure: BreathingGas = {
+        pn2: this.currentGas.pn2 * (currentStep.depth * barMSW + ATM),
+        phe2: this.currentGas.phe2 * (currentStep.depth * barMSW + ATM)
+      };
+      this.compartments.forEach(c => c.expose(gasAtPressure, currentStep.t));
     }
   }
   get currentGas() {
     return {
-      pn2: 0.75,
-      phe2: 2.36
+      pn2: 0.75 / 3.11,
+      phe2: 2.36 / 3.11
     };
   }
   get shallowestToleratedDepth(): Depth {
