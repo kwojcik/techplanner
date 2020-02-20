@@ -8,6 +8,7 @@
     "lodash": "^4.17.15"
   },
   "devDependencies": {
+    "jest": "^25.1.0",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   },
