@@ -19,11 +19,11 @@ export function calculateDecoProfile(diver: Diver): Profile {
   let currentStopTime: Minute = 0;
   while (currentStopDepth > 0) {
     currentStopTime += 1;
-    diver.expose([{ depth: currentStopDepth, t: currentStopTime }]);
+    diver.expose([{ d: currentStopDepth, t: currentStopTime }]);
 
     const nextStopDepth = depthToStopDepth(diver.deepestToleratedDepth);
     if (nextStopDepth != currentStopDepth) {
-      decoProfile.push({ depth: currentStopDepth, t: currentStopTime });
+      decoProfile.push({ d: currentStopDepth, t: currentStopTime });
       currentStopDepth = nextStopDepth;
       currentStopTime = 0;
     }
