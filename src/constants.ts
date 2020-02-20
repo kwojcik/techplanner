@@ -2,7 +2,7 @@ import { Pressure, HalfTime, AValue, BValue } from "./types";
 export const pwater: Pressure = 0.063;
 //export const barMSW: Pressure = 0.100693064;
 export const barMSW: Pressure = 0.1;
-export const ATM: Pressure = 1;
+export const ATM: Pressure = 1.0;
 
 export const n2HTs: HalfTime[] = [
   2.65,
@@ -10,36 +10,36 @@ export const n2HTs: HalfTime[] = [
   12.2,
   18.5,
   26.5,
-  37,
-  53,
-  79,
-  114,
-  146,
-  185,
-  238,
-  304,
-  397,
-  503,
-  635
+  37.0,
+  53.0,
+  79.0,
+  114.0,
+  146.0,
+  185.0,
+  238.0,
+  304.0,
+  397.0,
+  503.0,
+  635.0
 ];
 
 export const he2HTs: HalfTime[] = [
-  1,
-  3,
+  1.0,
+  3.0,
   4.6,
-  7,
-  10,
-  14,
-  20,
-  30,
-  43,
-  55,
-  70,
-  90,
-  115,
-  150,
-  190,
-  240
+  7.0,
+  10.0,
+  14.0,
+  20.0,
+  30.0,
+  43.0,
+  55.0,
+  70.0,
+  90.0,
+  115.0,
+  150.0,
+  190.0,
+  240.0
 ];
 
 export const n2As: AValue[] = [
@@ -54,6 +54,7 @@ export const n2As: AValue[] = [
   0.455,
   0.455,
   0.38,
+  0.255,
   0.255,
   0.255,
   0.255,

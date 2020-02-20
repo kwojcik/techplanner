@@ -16,7 +16,6 @@ import {
   n2HTs,
   he2HTs,
   pwater,
-  ATM,
   barMSW
 } from "./constants";
 
@@ -33,7 +32,7 @@ function calcPIGT({
 }): Pressure {
   return (
     pigtt0 +
-    (piig - pwater - pigtt0) * (1 - Math.pow(Math.E, (-Math.LN2 * t) / ht))
+    (piig - pwater - pigtt0) * (1.0 - Math.pow(Math.E, (-Math.LN2 * t) / ht))
   );
 }
 
@@ -82,7 +81,8 @@ export default class Compartment {
     );
   }
 
-  get depthTolerated(): Depth {
-    return (this.pat - ATM) / barMSW;
+  depthTolerated(atm: Pressure): Depth {
+    const depth = Math.max(this.pat - atm, 0) / barMSW;
+    return depth;
   }
 }
