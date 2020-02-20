@@ -7,7 +7,7 @@ import Diver from "./diver";
 
 // Generate decompression profile
 const stopDepthDelta = 3;
-function depthToStopDepth(depth: Depth): Depth {
+export function depthToStopDepth(depth: Depth): Depth {
   return Math.round(
     depth + ((stopDepthDelta - (depth % stopDepthDelta)) % stopDepthDelta)
   );
