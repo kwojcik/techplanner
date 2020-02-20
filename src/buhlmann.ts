@@ -1,3 +1,4 @@
+import { max } from "lodash";
 const n2HTs: HalfTime[] = [
   2.65,
   7.94,
@@ -218,22 +219,14 @@ class Diver {
       phe2: 2.36 / 3.11
     };
   }
-  get shallowestToleratedDepth(): Depth {
-    let shallowestToleratedDepth: Depth = Infinity;
-    for (let i = 0; i < this.compartments.length; i++) {
-      if (shallowestToleratedDepth > this.compartments[i].depthTolerated) {
-        shallowestToleratedDepth = this.compartments[i].depthTolerated;
-      }
-    }
-    return shallowestToleratedDepth;
+  get deepestToleratedDepth(): Depth {
+    const depths = this.compartments.map(c => c.depthTolerated);
+    const deepest = max(depths);
+    return deepest;
   }
 }
 
 const profile = [{ depth: 21.1, t: 60 }];
-
-//const tDelta: Minute = 1.0 / 60; // 1 second
-//const ascentRate: DepthChangeRate = 10; // 10 meters/minute
-//const descentRate: DepthChangeRate = 10; // 10 meters/minute
 
 const diver = new Diver(0.75, 0);
 diver.expose(profile);
@@ -251,3 +244,30 @@ for (let i = 0; i < compartmentsToSimulate.length; i++) {
 console.log(pigtpartials);
 console.log(pigts);
 console.log(pats);
+
+//const tDelta: Minute = 1.0 / 60; // 1 second
+//const ascentRate: DepthChangeRate = 10; // 10 meters/minute
+//const descentRate: DepthChangeRate = 10; // 10 meters/minute
+
+// Generate decompression profile
+const stopDepthDelta = 3;
+function depthToStopDepth(depth: Depth): Depth {
+  return Math.round(
+    depth + ((stopDepthDelta - (depth % stopDepthDelta)) % stopDepthDelta)
+  );
+}
+const decoProfile: Profile = [];
+let currentStopDepth: Depth = depthToStopDepth(diver.deepestToleratedDepth);
+let currentStopTime: Minute = 0;
+while (currentStopDepth > 0) {
+  currentStopTime += 1;
+  diver.expose([{ depth: currentStopDepth, t: currentStopTime }]);
+
+  const nextStopDepth = depthToStopDepth(diver.deepestToleratedDepth);
+  if (nextStopDepth != currentStopDepth) {
+    decoProfile.push({ depth: currentStopDepth, t: currentStopTime });
+    currentStopDepth = nextStopDepth;
+    currentStopTime = 0;
+  }
+}
+console.log(decoProfile);
