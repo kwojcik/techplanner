@@ -9,15 +9,18 @@ import {
   Depth
 } from "./types";
 import {
-  n2As,
-  he2As,
-  n2Bs,
-  he2Bs,
-  n2HTs,
-  he2HTs,
+  //  n2As,
+  //  he2As,
+  //  n2Bs,
+  //  he2Bs,
+  //  n2HTs,
+  //  he2HTs,
+  getA,
+  getB,
   pwater,
   barMSW
-} from "./constants";
+} from "./constantszhl16c";
+import { n2HTs } from "./constants";
 
 function calcPIGT({
   pigtt0,
@@ -54,12 +57,14 @@ export default class Compartment {
       t: t,
       ht: n2HTs[this.num]
     });
+    /*
     this.phe2 = calcPIGT({
       pigtt0: this.phe2,
       piig: gas.phe2 + pwater,
       t: t,
       ht: he2HTs[this.num]
     });
+    */
   }
 
   get pigt(): Pressure {
@@ -70,13 +75,13 @@ export default class Compartment {
   }
   get a(): AValue {
     return (
-      (this.phe2 * he2As[this.num] + this.pn2 * n2As[this.num]) /
+      /*this.phe2 * he2As[this.num] +*/ (this.pn2 * getA(this.num)) /
       (this.phe2 + this.pn2)
     );
   }
   get b(): BValue {
     return (
-      (this.phe2 * he2Bs[this.num] + this.pn2 * n2Bs[this.num]) /
+      /*this.phe2 * he2Bs[this.num] +*/ (this.pn2 * getB(this.num)) /
       (this.phe2 + this.pn2)
     );
   }

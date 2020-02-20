@@ -41,6 +41,7 @@ export default class Diver {
   get deepestToleratedDepth(): Depth {
     const depths = this.compartments.map(c => c.depthTolerated(this.atm));
     const deepest = max(depths);
+    return Math.round(deepest);
     if (deepest <= 0.5) {
       return 0;
     }
