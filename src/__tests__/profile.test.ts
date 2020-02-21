@@ -32,11 +32,11 @@ expect.extend({
         };
       }
       if (
-        Math.abs(actual[i].t - expected[i].t) > Math.ceil(0.05 * expected[i].t)
+        Math.abs(actual[i].t - expected[i].t) > Math.ceil(0.1 * expected[i].t)
       ) {
         return {
           message: () =>
-            `expected stop ${i} time ${actual[i].t} to be within 5% of ${
+            `expected stop ${i} time ${actual[i].t} to be within 10% of ${
               expected[i].t
             }. Actual profile:${JSON.stringify(actual)}`,
           pass: false
@@ -78,150 +78,301 @@ describe("profile", () => {
     function runTest(
       diveProfile: Profile,
       expectedDecoProfile: Profile,
-      breathingGas: BreathingGas
+      breathingGases: BreathingGas[]
     ) {
-      const diver = new Diver(0.79, 0, [breathingGas], { atm: 1.0 });
+      const diver = new Diver(0.79, 0, breathingGases, { atm: 1.0 });
       diver.expose(diveProfile);
       const calculatedDecoProfile = calculateDecoProfile(diver);
       expect(calculatedDecoProfile).toMatchDecoProfile(expectedDecoProfile);
     }
     describe("on air", () => {
-      const gas = { pn2: 0.79, phe2: 0 };
+      const gases = [{ pn2: 0.79, phe2: 0 }];
       /* 9 meters */
-      it("9 meters 300 minutes", () => {
-        runTest([{ d: 9, t: 300 }], [], gas);
+      it("air 9 meters 300 minutes", () => {
+        runTest([{ d: 9, t: 300 }], [], gases);
       });
 
       /* 12 meters */
-      it("12 meters 120 minute", () => {
-        runTest([{ d: 12, t: 120 }], [], gas);
+      it("air 12 meters 120 minute", () => {
+        runTest([{ d: 12, t: 120 }], [], gases);
       });
-      it("12 meters 150 minute", () => {
-        runTest([{ d: 12, t: 150 }], [], gas);
+      it("air 12 meters 150 minute", () => {
+        runTest([{ d: 12, t: 150 }], [], gases);
       });
-      it("12 meters 180 minute", () => {
-        runTest([{ d: 12, t: 180 }], [], gas);
+      it("air 12 meters 180 minute", () => {
+        runTest([{ d: 12, t: 180 }], [], gases);
       });
-      it("12 meters 210 minute", () => {
-        runTest([{ d: 12, t: 210 }], genP([3, 5]), gas);
+      it("air 12 meters 210 minute", () => {
+        runTest([{ d: 12, t: 210 }], genP([3, 5]), gases);
       });
-      it("12 meters 240 minute", () => {
-        runTest([{ d: 12, t: 240 }], genP([3, 11]), gas);
+      it("air 12 meters 240 minute", () => {
+        runTest([{ d: 12, t: 240 }], genP([3, 11]), gases);
       });
-      it("12 meters 270 minute", () => {
-        runTest([{ d: 12, t: 270 }], genP([3, 16]), gas);
+      it("air 12 meters 270 minute", () => {
+        runTest([{ d: 12, t: 270 }], genP([3, 16]), gases);
       });
-      it("12 meters 300 minute", () => {
-        runTest([{ d: 12, t: 300 }], genP([3, 22]), gas);
+      it("air 12 meters 300 minute", () => {
+        runTest([{ d: 12, t: 300 }], genP([3, 22]), gases);
       });
 
       /* 15 meters */
-      it("15 meters 60 minutes", () => {
-        runTest([{ d: 15, t: 60 }], [], gas);
+      it("air 15 meters 60 minutes", () => {
+        runTest([{ d: 15, t: 60 }], [], gases);
       });
-      it("15 meters 90 minutes", () => {
-        runTest([{ d: 15, t: 90 }], genP([3, 1]), gas);
+      it("air 15 meters 90 minutes", () => {
+        runTest([{ d: 15, t: 90 }], genP([3, 1]), gases);
       });
-      it("15 meters 120 minutes", () => {
-        runTest([{ d: 15, t: 120 }], genP([3, 10]), gas);
+      it("air 15 meters 120 minutes", () => {
+        runTest([{ d: 15, t: 120 }], genP([3, 10]), gases);
       });
-      it("15 meters 150 minutes", () => {
-        runTest([{ d: 15, t: 150 }], genP([3, 18]), gas);
+      it("air 15 meters 150 minutes", () => {
+        runTest([{ d: 15, t: 150 }], genP([3, 18]), gases);
       });
-      it("15 meters 180 minutes", () => {
-        runTest([{ d: 15, t: 180 }], genP([3, 30]), gas);
+      it("air 15 meters 180 minutes", () => {
+        runTest([{ d: 15, t: 180 }], genP([3, 30]), gases);
       });
-      it("15 meters 210 minutes", () => {
-        runTest([{ d: 15, t: 210 }], genP([3, 39]), gas);
+      it("air 15 meters 210 minutes", () => {
+        runTest([{ d: 15, t: 210 }], genP([3, 39]), gases);
       });
 
       /* 18 meters */
 
-      it("18 meters 59 minutes", () => {
-        runTest([{ d: 18, t: 59 }], [], gas);
+      it("air 18 meters 59 minutes", () => {
+        runTest([{ d: 18, t: 59 }], [], gases);
       });
-      it("18 meters 60 minutes", () => {
-        runTest([{ d: 18, t: 60 }], genP([3, 1]), gas);
+      it("air 18 meters 60 minutes", () => {
+        runTest([{ d: 18, t: 60 }], genP([3, 1]), gases);
       });
-      it("18 meters 70 minutes", () => {
-        runTest([{ d: 18, t: 70 }], genP([3, 6]), gas);
+      it("air 18 meters 70 minutes", () => {
+        runTest([{ d: 18, t: 70 }], genP([3, 6]), gases);
       });
-      it("18 meters 80 minutes", () => {
-        runTest([{ d: 18, t: 80 }], genP([3, 10]), gas);
+      it("air 18 meters 80 minutes", () => {
+        runTest([{ d: 18, t: 80 }], genP([3, 10]), gases);
       });
-      it("18 meters 90 minutes", () => {
-        runTest([{ d: 18, t: 90 }], genP([3, 14]), gas);
+      it("air 18 meters 90 minutes", () => {
+        runTest([{ d: 18, t: 90 }], genP([3, 14]), gases);
       });
-      it("18 meters 100 minutes", () => {
-        runTest([{ d: 18, t: 100 }], genP([3, 19]), gas);
+      it("air 18 meters 100 minutes", () => {
+        runTest([{ d: 18, t: 100 }], genP([3, 19]), gases);
       });
-      it("18 meters 110 minutes", () => {
-        runTest([{ d: 18, t: 110 }], genP([3, 24]), gas);
+      it("air 18 meters 110 minutes", () => {
+        runTest([{ d: 18, t: 110 }], genP([3, 24]), gases);
       });
-      it("18 meters 120 minutes", () => {
-        runTest([{ d: 18, t: 120 }], genP([3, 28]), gas);
+      it("air 18 meters 120 minutes", () => {
+        runTest([{ d: 18, t: 120 }], genP([3, 28]), gases);
       });
-      it("18 meters 130 minutes", () => {
-        runTest([{ d: 18, t: 130 }], genP([3, 35]), gas);
+      it("air 18 meters 130 minutes", () => {
+        runTest([{ d: 18, t: 130 }], genP([3, 35]), gases);
       });
-      it("18 meters 140 minutes", () => {
-        runTest([{ d: 18, t: 140 }], genP([6, 1, 3, 40]), gas);
+      it("air 18 meters 140 minutes", () => {
+        runTest([{ d: 18, t: 140 }], genP([6, 1, 3, 40]), gases);
       });
-      it("18 meters 150 minutes", () => {
-        runTest([{ d: 18, t: 150 }], genP([6, 1, 3, 44]), gas);
+      it("air 18 meters 150 minutes", () => {
+        runTest([{ d: 18, t: 150 }], genP([6, 1, 3, 44]), gases);
       });
-      it("18 meters 160 minutes", () => {
-        runTest([{ d: 18, t: 160 }], genP([6, 5, 3, 46]), gas);
+      it("air 18 meters 160 minutes", () => {
+        runTest([{ d: 18, t: 160 }], genP([6, 5, 3, 46]), gases);
       });
-      it("18 meters 170 minutes", () => {
-        runTest([{ d: 18, t: 170 }], genP([6, 7, 3, 51]), gas);
+      it("air 18 meters 170 minutes", () => {
+        runTest([{ d: 18, t: 170 }], genP([6, 7, 3, 51]), gases);
       });
-      it("18 meters 180 minutes", () => {
-        runTest([{ d: 18, t: 180 }], genP([6, 9, 3, 56]), gas);
+      it("air 18 meters 180 minutes", () => {
+        runTest([{ d: 18, t: 180 }], genP([6, 9, 3, 56]), gases);
       });
-      it("18 meters 190 minutes", () => {
-        runTest([{ d: 18, t: 190 }], genP([6, 10, 3, 60]), gas);
+      it("air 18 meters 190 minutes", () => {
+        runTest([{ d: 18, t: 190 }], genP([6, 10, 3, 60]), gases);
       });
-      it("18 meters 200 minutes", () => {
-        runTest([{ d: 18, t: 200 }], genP([6, 11, 3, 65]), gas);
+      it("air 18 meters 200 minutes", () => {
+        runTest([{ d: 18, t: 200 }], genP([6, 11, 3, 65]), gases);
       });
 
       /* 35 meters */
-      it("35 meters 25 minutes", () => {
-        runTest([{ d: 35, t: 25 }], genP([6, 2, 3, 8]), gas);
+      it("air 35 meters 25 minutes", () => {
+        runTest([{ d: 35, t: 25 }], genP([6, 2, 3, 8]), gases);
       });
-      it("35 meters 50 minutes", () => {
-        runTest([{ d: 35, t: 50 }], genP([9, 5, 6, 16, 3, 30]), gas);
+      it("air 35 meters 50 minutes", () => {
+        runTest([{ d: 35, t: 50 }], genP([9, 5, 6, 16, 3, 30]), gases);
       });
-      it("35 meters 100 minutes", () => {
-        runTest([{ d: 35, t: 100 }], genP([12, 12, 9, 24, 6, 41, 3, 84]), gas);
+      it("air 35 meters 100 minutes", () => {
+        runTest(
+          [{ d: 35, t: 100 }],
+          genP([12, 12, 9, 24, 6, 41, 3, 84]),
+          gases
+        );
       });
 
       /* 50 meters */
-      it("50 meters 5 minutes", () => {
-        runTest([{ d: 50, t: 5 }], [], gas);
+      it("air 50 meters 5 minutes", () => {
+        runTest([{ d: 50, t: 5 }], [], gases);
       });
-      it("50 meters 10 minutes", () => {
-        runTest([{ d: 50, t: 10 }], genP([6, 1, 3, 3]), gas);
+      it("air 50 meters 10 minutes", () => {
+        runTest([{ d: 50, t: 10 }], genP([6, 1, 3, 3]), gases);
       });
-      it("50 meters 15 minutes", () => {
-        runTest([{ d: 50, t: 15 }], genP([9, 1, 6, 3, 3, 7]), gas);
+      it("air 50 meters 15 minutes", () => {
+        runTest([{ d: 50, t: 15 }], genP([9, 1, 6, 3, 3, 7]), gases);
       });
-      it("50 meters 25 minutes", () => {
-        runTest([{ d: 50, t: 25 }], genP([12, 2, 9, 5, 6, 9, 3, 21]), gas);
+      it("air 50 meters 25 minutes", () => {
+        runTest([{ d: 50, t: 25 }], genP([12, 2, 9, 5, 6, 9, 3, 21]), gases);
       });
-      it("50 meters 50 minutes", () => {
+      it("air 50 meters 50 minutes", () => {
         runTest(
           [{ d: 50, t: 50 }],
           genP([18, 1, 15, 6, 12, 10, 9, 18, 6, 29, 3, 59]),
-          gas
+          gases
         );
       });
-      it("50 meters 100 minutes", () => {
+      it("air 50 meters 100 minutes", () => {
         runTest(
           [{ d: 50, t: 100 }],
           genP([21, 8, 18, 14, 15, 20, 12, 29, 9, 44, 6, 83, 3, 187]),
-          gas
+          gases
+        );
+      });
+    });
+    describe("on air + oxy deco", () => {
+      const gases = [
+        { pn2: 0.79, phe2: 0 },
+        { pn2: 0.0, phe2: 0 }
+      ];
+      /* 9 meters */
+      it("air+oxy 9 meters 300 minutes", () => {
+        runTest([{ d: 9, t: 300 }], [], gases);
+      });
+
+      /* 12 meters */
+      it("air+oxy 12 meters 120 minute", () => {
+        runTest([{ d: 12, t: 120 }], [], gases);
+      });
+      it("air+oxy 12 meters 150 minute", () => {
+        runTest([{ d: 12, t: 150 }], [], gases);
+      });
+      it("air+oxy 12 meters 180 minute", () => {
+        runTest([{ d: 12, t: 180 }], [], gases);
+      });
+      it("air+oxy 12 meters 210 minute", () => {
+        runTest([{ d: 12, t: 210 }], genP([3, 3]), gases);
+      });
+      it("air+oxy 12 meters 240 minute", () => {
+        runTest([{ d: 12, t: 240 }], genP([3, 5]), gases);
+      });
+      it("air+oxy 12 meters 270 minute", () => {
+        runTest([{ d: 12, t: 270 }], genP([3, 7]), gases);
+      });
+      it("air+oxy 12 meters 300 minute", () => {
+        runTest([{ d: 12, t: 300 }], genP([3, 9]), gases);
+      });
+
+      /* 15 meters */
+      it("air+oxy 15 meters 60 minutes", () => {
+        runTest([{ d: 15, t: 60 }], [], gases);
+      });
+      it("air+oxy 15 meters 90 minutes", () => {
+        runTest([{ d: 15, t: 90 }], genP([3, 1]), gases);
+      });
+      it("air+oxy 15 meters 120 minutes", () => {
+        runTest([{ d: 15, t: 120 }], genP([3, 4]), gases);
+      });
+      it("air+oxy 15 meters 150 minutes", () => {
+        runTest([{ d: 15, t: 150 }], genP([3, 8]), gases);
+      });
+      it("air+oxy 15 meters 180 minutes", () => {
+        runTest([{ d: 15, t: 180 }], genP([3, 11]), gases);
+      });
+      it("air+oxy 15 meters 210 minutes", () => {
+        runTest([{ d: 15, t: 210 }], genP([3, 15]), gases);
+      });
+
+      /* 18 meters */
+
+      it("air+oxy 18 meters 59 minutes", () => {
+        runTest([{ d: 18, t: 59 }], [], gases);
+      });
+      it("air+oxy 18 meters 60 minutes", () => {
+        runTest([{ d: 18, t: 60 }], genP([3, 1]), gases);
+      });
+      it("air+oxy 18 meters 70 minutes", () => {
+        runTest([{ d: 18, t: 70 }], genP([3, 3]), gases);
+      });
+      it("air+oxy 18 meters 80 minutes", () => {
+        runTest([{ d: 18, t: 80 }], genP([3, 5]), gases);
+      });
+      it("air+oxy 18 meters 90 minutes", () => {
+        runTest([{ d: 18, t: 90 }], genP([3, 7]), gases);
+      });
+      it("air+oxy 18 meters 100 minutes", () => {
+        runTest([{ d: 18, t: 100 }], genP([3, 9]), gases);
+      });
+      it("air+oxy 18 meters 110 minutes", () => {
+        runTest([{ d: 18, t: 110 }], genP([3, 10]), gases);
+      });
+      it("air+oxy 18 meters 120 minutes", () => {
+        runTest([{ d: 18, t: 120 }], genP([3, 12]), gases);
+      });
+      it("air+oxy 18 meters 130 minutes", () => {
+        runTest([{ d: 18, t: 130 }], genP([3, 13]), gases);
+      });
+      it("air+oxy 18 meters 140 minutes", () => {
+        runTest([{ d: 18, t: 140 }], genP([6, 1, 3, 16]), gases);
+      });
+      it("air+oxy 18 meters 150 minutes", () => {
+        runTest([{ d: 18, t: 150 }], genP([6, 1, 3, 18]), gases);
+      });
+      it("air+oxy 18 meters 160 minutes", () => {
+        runTest([{ d: 18, t: 160 }], genP([6, 2, 3, 19]), gases);
+      });
+      it("air+oxy 18 meters 170 minutes", () => {
+        runTest([{ d: 18, t: 170 }], genP([6, 3, 3, 19]), gases);
+      });
+      it("air+oxy 18 meters 180 minutes", () => {
+        runTest([{ d: 18, t: 180 }], genP([6, 4, 3, 20]), gases);
+      });
+      it("air+oxy 18 meters 190 minutes", () => {
+        runTest([{ d: 18, t: 190 }], genP([6, 4, 3, 22]), gases);
+      });
+      it("air+oxy 18 meters 200 minutes", () => {
+        runTest([{ d: 18, t: 200 }], genP([6, 5, 3, 24]), gases);
+      });
+
+      /* 35 meters */
+      it("air+oxy 35 meters 25 minutes", () => {
+        runTest([{ d: 35, t: 25 }], genP([6, 2, 3, 4]), gases);
+      });
+      it("air+oxy 35 meters 50 minutes", () => {
+        runTest([{ d: 35, t: 50 }], genP([9, 5, 6, 7, 3, 12]), gases);
+      });
+      it("air+oxy 35 meters 100 minutes", () => {
+        runTest(
+          [{ d: 35, t: 100 }],
+          genP([12, 12, 9, 24, 6, 16, 3, 28]),
+          gases
+        );
+      });
+
+      /* 50 meters */
+      it("air+oxy 50 meters 5 minutes", () => {
+        runTest([{ d: 50, t: 5 }], [], gases);
+      });
+      it("air+oxy 50 meters 10 minutes", () => {
+        runTest([{ d: 50, t: 10 }], genP([6, 1, 3, 1]), gases);
+      });
+      it("air+oxy 50 meters 15 minutes", () => {
+        runTest([{ d: 50, t: 15 }], genP([9, 1, 6, 2, 3, 3]), gases);
+      });
+      it("air+oxy 50 meters 25 minutes", () => {
+        runTest([{ d: 50, t: 25 }], genP([12, 2, 9, 5, 6, 5, 3, 9]), gases);
+      });
+      it("air+oxy 50 meters 50 minutes", () => {
+        runTest(
+          [{ d: 50, t: 50 }],
+          genP([18, 1, 15, 6, 12, 10, 9, 18, 6, 13, 3, 20]),
+          gases
+        );
+      });
+      it("air+oxy 50 meters 100 minutes", () => {
+        runTest(
+          [{ d: 50, t: 100 }],
+          genP([21, 8, 18, 14, 15, 20, 12, 29, 9, 44, 6, 29, 3, 53]),
+          gases
         );
       });
     });

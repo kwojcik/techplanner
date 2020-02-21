@@ -39,6 +39,7 @@ export function calculateDecoProfile(diver: Diver): Profile {
       ascend(diver, currentStopDepth);
       currentStopDepth = depthToStopDepth(diver.deepestToleratedDepth);
     }
+    diver.selectBestDecoGas();
 
     currentStopTime += 1;
     diver.expose([{ d: currentStopDepth, t: 1 }]);

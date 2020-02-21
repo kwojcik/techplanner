@@ -1,4 +1,4 @@
-import { max } from "lodash";
+import { max, min } from "lodash";
 import Compartment from "./compartment";
 import { Pressure, Profile, BreathingGas, Depth } from "./types";
 import { barMSW, ATM } from "./constants";
@@ -9,6 +9,7 @@ export default class Diver {
   selectedGas = 0; // What is the Integer type?
   atm: Pressure;
   depth: Depth;
+  ppo2Deco: Pressure = 1.6;
 
   constructor(
     pn2: Pressure,
@@ -47,5 +48,20 @@ export default class Diver {
       return 0;
     }
     return deepest;
+  }
+
+  selectBestDecoGas() {
+    // TODO only works for nitrox
+    let minpn2 = this.breathingGases[0].pn2;
+    for (let i = 0; i < this.breathingGases.length; i++) {
+      if (
+        this.breathingGases[i].pn2 < minpn2 &&
+        (1.0 - this.breathingGases[i].pn2) * (this.depth * barMSW + 1) <=
+          this.ppo2Deco
+      ) {
+        this.selectedGas = i;
+        minpn2 = this.breathingGases[i].pn2;
+      }
+    }
   }
 }
