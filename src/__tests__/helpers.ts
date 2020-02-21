@@ -1,4 +1,7 @@
 import { Profile } from "../types";
+describe("stop failing because there are no tests", () => {
+  it("please stop", () => {});
+});
 
 export function toMatchDecoProfile(actual: Profile, expected: Profile) {
   if (actual.length !== expected.length) {
