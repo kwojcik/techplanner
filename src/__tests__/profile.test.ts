@@ -80,7 +80,7 @@ describe("profile", () => {
       expectedDecoProfile: Profile,
       breathingGas: BreathingGas
     ) {
-      const diver = new Diver(0.79, 0, breathingGas, { atm: 1.0 });
+      const diver = new Diver(0.79, 0, [breathingGas], { atm: 1.0 });
       diver.expose(diveProfile);
       const calculatedDecoProfile = calculateDecoProfile(diver);
       expect(calculatedDecoProfile).toMatchDecoProfile(expectedDecoProfile);

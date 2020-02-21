@@ -4,10 +4,12 @@ import { calculateDecoProfile } from "./profile";
 
 const profile = [{ d: 21.1, t: 60 }];
 
-const diver = new Diver(0.75, 0, {
-  pn2: 0.75 / 3.11,
-  phe2: 2.36 / 3.11
-});
+const diver = new Diver(0.75, 0, [
+  {
+    pn2: 0.75 / 3.11,
+    phe2: 2.36 / 3.11
+  }
+]);
 diver.expose(profile);
 
 const compartmentsToSimulate: CompartmentNumber[] = [4, 5, 6, 7];
