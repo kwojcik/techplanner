@@ -3,7 +3,7 @@ import {
   Minute,
   HalfTime,
   CompartmentNumber,
-  BreathingGas,
+  InspiredGas,
   AValue,
   BValue,
   Depth
@@ -50,7 +50,7 @@ export default class Compartment {
     this.num = num;
   }
 
-  expose(gas: BreathingGas, t: Minute): void {
+  expose(gas: InspiredGas, t: Minute): void {
     this.pn2 = calcPIGT({
       pigtt0: this.pn2,
       piig: gas.pn2 + pwater,

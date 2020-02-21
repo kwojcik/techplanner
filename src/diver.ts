@@ -1,6 +1,6 @@
 import { max, min } from "lodash";
 import Compartment from "./compartment";
-import { Pressure, Profile, BreathingGas, Depth } from "./types";
+import { Pressure, Profile, InspiredGas, BreathingGas, Depth } from "./types";
 import { barMSW, ATM } from "./constants";
 
 export default class Diver {
@@ -29,9 +29,13 @@ export default class Diver {
   expose(profile: Profile) {
     for (let i = 0; i < profile.length; i++) {
       const currentStep = profile[i];
-      const gasAtPressure: BreathingGas = {
-        pn2: this.currentGas.pn2 * (currentStep.d * barMSW + this.atm),
-        phe2: this.currentGas.phe2 * (currentStep.d * barMSW + this.atm)
+      const gasAtPressure: InspiredGas = {
+        pn2:
+          (this.currentGas.percentn2 / 100.0) *
+          (currentStep.d * barMSW + this.atm),
+        phe2:
+          (this.currentGas.percenthe2 / 100.0) *
+          (currentStep.d * barMSW + this.atm)
       };
       this.compartments.forEach(c => c.expose(gasAtPressure, currentStep.t));
       this.depth = currentStep.d;
@@ -44,23 +48,20 @@ export default class Diver {
     const depths = this.compartments.map(c => c.depthTolerated(this.atm));
     const deepest = max(depths);
     return Math.round(deepest);
-    if (deepest <= 0.5) {
-      return 0;
-    }
-    return deepest;
   }
 
   selectBestDecoGas() {
     // TODO only works for nitrox
-    let minpn2 = this.breathingGases[0].pn2;
+    let minpn2 = this.breathingGases[0].percentn2;
     for (let i = 0; i < this.breathingGases.length; i++) {
       if (
-        this.breathingGases[i].pn2 < minpn2 &&
-        (1.0 - this.breathingGases[i].pn2) * (this.depth * barMSW + 1) <=
+        this.breathingGases[i].percentn2 < minpn2 &&
+        (1.0 - this.breathingGases[i].percentn2 / 100.0) *
+          (this.depth * barMSW + 1) <=
           this.ppo2Deco
       ) {
         this.selectedGas = i;
-        minpn2 = this.breathingGases[i].pn2;
+        minpn2 = this.breathingGases[i].percentn2;
       }
     }
   }

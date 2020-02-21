@@ -109,7 +109,7 @@ describe("profile", () => {
       expect(calculatedDecoProfile).toMatchDecoProfile(expectedDecoProfile);
     }
     describe("on air", () => {
-      const gases = [{ pn2: 0.79, phe2: 0 }];
+      const gases = [{ percentn2: 79, percenthe2: 0 }];
       /* 9 meters */
       it("air 9 meters 300 minutes", () => {
         runTest([{ d: 9, t: 300 }], [], gases);
@@ -254,8 +254,8 @@ describe("profile", () => {
     });
     describe("on air + oxy deco", () => {
       const gases = [
-        { pn2: 0.79, phe2: 0 },
-        { pn2: 0.0, phe2: 0 }
+        { percentn2: 79, percenthe2: 0 },
+        { percentn2: 0, percenthe2: 0 }
       ];
       /* 9 meters */
       it("air+oxy 9 meters 300 minutes", () => {
@@ -401,9 +401,9 @@ describe("profile", () => {
     });
     describe("air + nitrox + oxy", () => {
       const gases = [
-        { pn2: 0.79, phe2: 0 },
-        { pn2: 0.37, phe2: 0 },
-        { pn2: 0.0, phe2: 0 }
+        { percentn2: 79, percenthe2: 0 },
+        { percentn2: 37, percenthe2: 0 },
+        { percentn2: 0, percenthe2: 0 }
       ];
       /* 35 meters */
       it("air+nitrox+oxy 35 meters 25 minutes", () => {

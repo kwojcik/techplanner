@@ -7,6 +7,10 @@ export type AValue = number;
 export type BValue = number;
 export type CompartmentNumber = number;
 export type BreathingGas = {
+  percentn2: Pressure;
+  percenthe2: Pressure;
+};
+export type InspiredGas = {
   pn2: Pressure;
   phe2: Pressure;
 };
