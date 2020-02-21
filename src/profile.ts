@@ -49,7 +49,8 @@ export function calculateDecoProfile(diver: Diver): Profile {
       const stop = {
         d: currentStopDepth,
         // Included ascent time is in seconds, round up to the nearest minute
-        t: Math.round(currentStopTime)
+        t: Math.round(currentStopTime),
+        g: diver.currentGas
       };
       decoProfile.push(stop);
       currentStopDepth = nextStopDepth;

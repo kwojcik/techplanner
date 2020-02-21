@@ -1,4 +1,18 @@
-import { bestMix } from "../optimizer";
+import { bestMix, bestDecoForProfile } from "../optimizer";
+import { Profile } from "../types";
+import "./helpers";
+import { toMatchDecoProfile } from "./helpers";
+
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toMatchDecoProfile(expected: Profile): R;
+    }
+  }
+}
+expect.extend({
+  toMatchDecoProfile
+});
 
 describe("bestMix", () => {
   it("chooses oxy above 6m", () => {
@@ -19,5 +33,20 @@ describe("bestMix", () => {
     expect(bestMix(40, 1.4)).toEqual({ percentn2: 73, percenthe2: 0 });
     expect(bestMix(50, 1.4)).toEqual({ percentn2: 77, percenthe2: 0 });
     expect(bestMix(60, 1.4)).toEqual({ percentn2: 80, percenthe2: 0 });
+  });
+});
+describe("bestDecoForProfile", () => {
+  it("asd", () => {
+    const diveProfile: Profile = [{ d: 50, t: 100 }];
+    const bestDeco = bestDecoForProfile(diveProfile, 2);
+    expect(bestDeco).toMatchDecoProfile([
+      { d: 21, t: 5, g: { percentn2: 77, percenthe2: 0 } },
+      { d: 18, t: 8, g: { percentn2: 44, percenthe2: 0 } },
+      { d: 15, t: 10, g: { percentn2: 44, percenthe2: 0 } },
+      { d: 12, t: 15, g: { percentn2: 44, percenthe2: 0 } },
+      { d: 9, t: 22, g: { percentn2: 44, percenthe2: 0 } },
+      { d: 6, t: 22, g: { percentn2: 0, percenthe2: 0 } },
+      { d: 3, t: 40, g: { percentn2: 0, percenthe2: 0 } }
+    ]);
   });
 });
