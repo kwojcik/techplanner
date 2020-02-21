@@ -399,5 +399,50 @@ describe("profile", () => {
         );
       });
     });
+    describe("air + nitrox + oxy", () => {
+      const gases = [
+        { pn2: 0.79, phe2: 0 },
+        { pn2: 0.37, phe2: 0 },
+        { pn2: 0.0, phe2: 0 }
+      ];
+      /* 35 meters */
+      it("air+nitrox+oxy 35 meters 25 minutes", () => {
+        runTest([{ d: 35, t: 25 }], genP([6, 1, 3, 3]), gases);
+      });
+      it("air+nitrox+oxy 35 meters 50 minutes", () => {
+        runTest([{ d: 35, t: 50 }], genP([9, 2, 6, 7, 3, 12]), gases);
+      });
+      it("air+nitrox+oxy 35 meters 100 minutes", () => {
+        runTest([{ d: 35, t: 100 }], genP([12, 8, 9, 12, 6, 15, 3, 24]), gases);
+      });
+
+      /* 50 meters */
+      it("air+nitrox+oxy 50 meters 5 minutes", () => {
+        runTest([{ d: 50, t: 5 }], [], gases);
+      });
+      it("air+nitrox+oxy 50 meters 10 minutes", () => {
+        runTest([{ d: 50, t: 10 }], genP([6, 1, 3, 1]), gases);
+      });
+      it("air+nitrox+oxy 50 meters 15 minutes", () => {
+        runTest([{ d: 50, t: 15 }], genP([9, 1, 6, 1, 3, 4]), gases);
+      });
+      it("air+nitrox+oxy 50 meters 25 minutes", () => {
+        runTest([{ d: 50, t: 25 }], genP([12, 1, 9, 3, 6, 4, 3, 9]), gases);
+      });
+      it("air+nitrox+oxy 50 meters 50 minutes", () => {
+        runTest(
+          [{ d: 50, t: 50 }],
+          genP([18, 1, 15, 4, 12, 6, 9, 10, 6, 10, 3, 18]),
+          gases
+        );
+      });
+      it("air+nitrox+oxy 50 meters 100 minutes", () => {
+        runTest(
+          [{ d: 50, t: 100 }],
+          genP([21, 8, 18, 14, 15, 11, 12, 14, 9, 22, 6, 24, 3, 43]),
+          gases
+        );
+      });
+    });
   });
 });
