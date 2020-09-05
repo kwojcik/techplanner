@@ -19,7 +19,7 @@ import {
   getB,
   pwater,
   barMSW
-} from "./constantszhl16c";
+} from "./constantsZHL16c";
 import { n2HTs } from "./constants";
 
 function calcPIGT({

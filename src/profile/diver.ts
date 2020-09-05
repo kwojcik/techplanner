@@ -6,7 +6,7 @@ import { barMSW, ATM } from "./constants";
 export default class Diver {
   compartments: Compartment[] = [];
   breathingGases: BreathingGas[];
-  selectedGas = 0; // What is the Integer type?
+  selectedGas: number = 0; // What is the Integer type?
   atm: Pressure;
   depth: Depth;
   ppo2Deco: Pressure = 1.6;
@@ -17,14 +17,16 @@ export default class Diver {
     breathingGases: BreathingGas[],
     options: {
       // allow ambient pressure to be set for safety or altitude
-      atm: Pressure;
-    } = { atm: ATM }
+      atm: Pressure,
+      depth: Depth,
+    } = { atm: ATM, depth: 0 }
   ) {
     for (let i = 0; i < 16; i++) {
       this.compartments.push(new Compartment(pn2, phe2, i));
     }
     this.breathingGases = breathingGases;
     this.atm = options.atm;
+    this.depth = options.depth
   }
   expose(profile: Profile) {
     for (let i = 0; i < profile.length; i++) {
@@ -46,7 +48,7 @@ export default class Diver {
   }
   get deepestToleratedDepth(): Depth {
     const depths = this.compartments.map(c => c.depthTolerated(this.atm));
-    const deepest = max(depths);
+    const deepest = max(depths) || 0;
     return Math.round(deepest);
   }
 
