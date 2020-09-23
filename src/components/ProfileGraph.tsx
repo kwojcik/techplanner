@@ -1,5 +1,5 @@
 import React from 'react'
-import { ProfileStop } from '../profile/types'
+import { BreathingGas, ProfileStop } from '../profile/types'
 import Profile from '../profile/profile'
 import Diver, { HistoryPoint } from '../profile/diver'
 // @ts-ignore
@@ -9,6 +9,8 @@ import { flattenDeep, sum } from 'lodash'
 type DataPoint = {
     runtime: number
     depth: number
+    ceiling: number
+    gas: BreathingGas
 }
 
 interface Props {
@@ -21,7 +23,7 @@ function diverToRechartsData(diver: Diver): DataPoint[] {
     const d = []
     for (let t = 0; t <= diver.runtime; t++) {
         const h = diver.getHistoryAt(t)
-        d.push({ runtime: t, depth: h.depth, ceiling: h.ceiling })
+        d.push({ runtime: t, depth: h.depth, ceiling: h.ceiling, gas: h.gas })
     }
     return d
 }
@@ -35,6 +37,25 @@ function getXTicks(fullProfile: Profile): number[] {
     return xTicks
 }
 
+const CustomTooltip = ({ active, payload, label }: { active: boolean; payload: { payload: { depth: number; ceiling: number; gas: BreathingGas } }[]; label: string }) => {
+    if (!active) {
+        return null
+    }
+    return (
+        <div className="recharts-default-tooltip" style={{
+            margin: 0,
+            padding: 10,
+            backgroundColor: '#fff',
+            border: '1px solid #ccc',
+            whiteSpace: 'nowrap',
+        }}>
+            <p className="recharts-tooltip-label">{`Runtime: ${label}`}</p>
+            <p className="recharts-tooltip-label">{`Depth: ${payload[0].payload.depth}`}</p>
+            <p className="recharts-tooltip-label">{`Ceiling: ${payload[0].payload.ceiling}`}</p>
+            <p className="recharts-tooltip-label">{`Gas: n2: ${payload[0].payload.gas.percentn2}% he2: ${payload[0].payload.gas.percenthe2}%`}</p>
+        </div>
+    );
+};
 
 const ProfileGraph = (props: Props) => {
     const fullProfile = props.diveProfile.concat(props.decoProfile)
@@ -46,24 +67,6 @@ const ProfileGraph = (props: Props) => {
     const decoBeginRuntime = props.diveProfile.runtime
     const decoEndRuntime = Math.round(props.diver.runtime)
 
-    const CustomTooltip = ({ active, payload, label }: { active: boolean; payload: any; label: string }) => {
-        if (!active) {
-            return null
-        }
-        return (
-            <div className="recharts-default-tooltip" style={{
-                margin: 0,
-                padding: 10,
-                backgroundColor: '#fff',
-                border: '1px solid #ccc',
-                whiteSpace: 'nowrap',
-            }}>
-                <p className="recharts-tooltip-label">{`Runtime: ${label}`}</p>
-                <p className="recharts-tooltip-label">{`Depth: ${payload[0].payload.depth}`}</p>
-                <p className="recharts-tooltip-label">{`Ceiling: ${payload[0].payload.ceiling}`}</p>
-            </div>
-        );
-    };
 
     return <LineChart width={750} height={500} data={data}>
         <CartesianGrid strokeDasharray="3 3" />

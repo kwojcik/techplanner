@@ -8,6 +8,7 @@ export type HistoryPoint = {
   depth: Depth;
   t: Minute;
   ceiling: Depth;
+  gas: BreathingGas
 }
 
 export default class Diver {
@@ -36,7 +37,7 @@ export default class Diver {
     this.breathingGases = breathingGases;
     this.atm = options.atm;
     this.depth = options.depth
-    this.history = [{ depth: this.depth, t: 0, ceiling: this.deepestToleratedDepth }]
+    this.history = [{ depth: this.depth, t: 0, ceiling: this.deepestToleratedDepth, gas: this.currentGas }]
     this.runtime = 0
   }
   expose(profile: Profile) {
@@ -55,7 +56,7 @@ export default class Diver {
         this.compartments.forEach(c => c.expose(gasAtPressure, timeAtStep));
         this.depth = currentStep.d;
         this.runtime += timeAtStep
-        this.history.push({ depth: this.depth, t: this.runtime, ceiling: this.deepestToleratedDepth })
+        this.history.push({ depth: this.depth, t: this.runtime, ceiling: this.deepestToleratedDepth, gas: this.currentGas })
       }
     }
   }
