@@ -21,7 +21,7 @@ function diverToRechartsData(diver: Diver): DataPoint[] {
     const d = []
     for (let t = 0; t <= diver.runtime; t++) {
         const h = diver.getHistoryAt(t)
-        d.push({ runtime: t, depth: h.depth })
+        d.push({ runtime: t, depth: h.depth, ceiling: h.ceiling })
     }
     return d
 }
@@ -51,7 +51,8 @@ const ProfileGraph = (props: Props) => {
         <YAxis reversed ticks={yTicks} label={{ value: "Depth", position: "insideLeft", angle: -90 }} interval={0} />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="depth" stroke="#8884d8" />
+        <Line type="monotone" dataKey="depth" stroke="#8884d8" dot={false} />
+        <Line type="monotone" dataKey="ceiling" stroke="red" dot={false} />
         {hasDeco && <ReferenceArea x1={decoBeginRuntime} x2={decoEndRuntime - 1} label="Deco" fill="yellow" opacity={0.2} />}
     </LineChart>
 }
