@@ -35,6 +35,7 @@ function getXTicks(fullProfile: Profile): number[] {
     return xTicks
 }
 
+
 const ProfileGraph = (props: Props) => {
     const fullProfile = props.diveProfile.concat(props.decoProfile)
     const data = diverToRechartsData(props.diver)
@@ -45,11 +46,30 @@ const ProfileGraph = (props: Props) => {
     const decoBeginRuntime = props.diveProfile.runtime
     const decoEndRuntime = Math.round(props.diver.runtime)
 
+    const CustomTooltip = ({ active, payload, label }: { active: boolean; payload: any; label: string }) => {
+        if (!active) {
+            return null
+        }
+        return (
+            <div className="recharts-default-tooltip" style={{
+                margin: 0,
+                padding: 10,
+                backgroundColor: '#fff',
+                border: '1px solid #ccc',
+                whiteSpace: 'nowrap',
+            }}>
+                <p className="recharts-tooltip-label">{`Runtime: ${label}`}</p>
+                <p className="recharts-tooltip-label">{`Depth: ${payload[0].payload.depth}`}</p>
+                <p className="recharts-tooltip-label">{`Ceiling: ${payload[0].payload.ceiling}`}</p>
+            </div>
+        );
+    };
+
     return <LineChart width={750} height={500} data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="runtime" label={{ value: "Runtime (minutes)", position: "insideBottom", offset: 0 }} ticks={xTicks} />
         <YAxis reversed ticks={yTicks} label={{ value: "Depth", position: "insideLeft", angle: -90 }} interval={0} />
-        <Tooltip />
+        <Tooltip content={CustomTooltip} />
         <Legend />
         <Line type="monotone" dataKey="depth" stroke="#8884d8" dot={false} />
         <Line type="monotone" dataKey="ceiling" stroke="red" dot={false} />
