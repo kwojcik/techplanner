@@ -59,8 +59,8 @@ export default class Diver {
       if (
         this.breathingGases[i].percentn2 < minpn2 &&
         (1.0 - this.breathingGases[i].percentn2 / 100.0) *
-          (this.depth * barMSW + 1) <=
-          this.ppo2Deco
+        (this.depth * barMSW + 1) <=
+        this.ppo2Deco
       ) {
         this.selectedGas = i;
         minpn2 = this.breathingGases[i].percentn2;
