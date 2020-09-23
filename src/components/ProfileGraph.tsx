@@ -1,6 +1,7 @@
 import React from 'react'
 import { ProfileStop } from '../profile/types'
 import Profile from '../profile/profile'
+import Diver, { HistoryPoint } from '../profile/diver'
 // @ts-ignore
 import { LineChart, XAxis, YAxis, Tooltip, Legend, Line, CartesianGrid, ReferenceLine, ReferenceArea } from 'recharts'
 import { flattenDeep, sum } from 'lodash'
@@ -13,19 +14,16 @@ type DataPoint = {
 interface Props {
     diveProfile: Profile
     decoProfile: Profile
+    diver: Diver
 }
 
-function profileToRechartsData(profile: Profile): DataPoint[] {
-    let minute = 0;
-    const expandedProfile = profile.stops.map((stop: ProfileStop) => {
-        const points = []
-        for (let i = 0; i < stop.t; i++) {
-            points.push({ runtime: minute, depth: stop.d })
-            minute += 1
-        }
-        return points
-    })
-    return flattenDeep(expandedProfile)
+function diverToRechartsData(diver: Diver): DataPoint[] {
+    const d = []
+    for (let t = 0; t <= diver.runtime; t++) {
+        const h = diver.getHistoryAt(t)
+        d.push({ runtime: t, depth: h.depth })
+    }
+    return d
 }
 
 function getXTicks(fullProfile: Profile): number[] {
@@ -39,13 +37,13 @@ function getXTicks(fullProfile: Profile): number[] {
 
 const ProfileGraph = (props: Props) => {
     const fullProfile = props.diveProfile.concat(props.decoProfile)
-    const data = profileToRechartsData(fullProfile)
+    const data = diverToRechartsData(props.diver)
     const yTicks = fullProfile.stops.map((stop: ProfileStop) => stop.d)
     const xTicks = getXTicks(fullProfile)
 
     const hasDeco = props.decoProfile.stops.length > 0;
     const decoBeginRuntime = props.diveProfile.runtime
-    const decoEndRuntime = fullProfile.runtime
+    const decoEndRuntime = Math.round(props.diver.runtime)
 
     return <LineChart width={750} height={500} data={data}>
         <CartesianGrid strokeDasharray="3 3" />

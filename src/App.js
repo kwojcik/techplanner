@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div className="App">
-      <ProfileGraph diveProfile={profile} decoProfile={decoProfile}></ProfileGraph>
+      <ProfileGraph diver={diver} diveProfile={profile} decoProfile={decoProfile}></ProfileGraph>
     </div>
   );
 }
