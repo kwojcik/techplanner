@@ -1,4 +1,4 @@
-import { max, min } from "lodash";
+import { max } from "lodash";
 import Compartment from "./compartment";
 import { Pressure, InspiredGas, BreathingGas, Depth, Minute } from "./types";
 import { barMSW, ATM } from "./constants";

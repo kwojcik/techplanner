@@ -1,10 +1,9 @@
 import React from 'react'
 import { BreathingGas, ProfileStop } from '../profile/types'
 import Profile from '../profile/profile'
-import Diver, { HistoryPoint } from '../profile/diver'
+import Diver from '../profile/diver'
 // @ts-ignore
 import { LineChart, XAxis, YAxis, Tooltip, Legend, Line, CartesianGrid, ReferenceLine, ReferenceArea } from 'recharts'
-import { flattenDeep, sum } from 'lodash'
 
 type DataPoint = {
     runtime: number
@@ -66,9 +65,17 @@ const ProfileGraph = (props: Props) => {
     const hasDeco = props.decoProfile.stops.length > 0;
     const decoBeginRuntime = props.diveProfile.runtime
     const decoEndRuntime = Math.round(props.diver.runtime)
+    let lastGas = data[0].gas
+    const switches: ReferenceLine[] = []
+    data.forEach(p => {
+        if (p.gas !== lastGas) {
+            switches.push(<ReferenceLine key={p.runtime} x={p.runtime} label="Gas Switch" stroke="green" />)
+            lastGas = p.gas
+        }
+    })
 
 
-    return <LineChart width={750} height={500} data={data}>
+    return (<LineChart width={1000} height={500} data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="runtime" label={{ value: "Runtime (minutes)", position: "insideBottom", offset: 0 }} ticks={xTicks} />
         <YAxis reversed ticks={yTicks} label={{ value: "Depth", position: "insideLeft", angle: -90 }} interval={0} />
@@ -77,7 +84,8 @@ const ProfileGraph = (props: Props) => {
         <Line type="monotone" dataKey="depth" stroke="#8884d8" dot={false} />
         <Line type="monotone" dataKey="ceiling" stroke="red" dot={false} />
         {hasDeco && <ReferenceArea x1={decoBeginRuntime} x2={decoEndRuntime - 1} label="Deco" fill="yellow" opacity={0.2} />}
-    </LineChart>
+        {switches}
+    </LineChart>)
 }
 
 export default ProfileGraph
