@@ -1,5 +1,6 @@
 import React from 'react'
-import { Profile, ProfileStop } from '../profile/types'
+import { ProfileStop } from '../profile/types'
+import Profile from '../profile/profile'
 // @ts-ignore
 import { LineChart, XAxis, YAxis, Tooltip, Legend, Line, CartesianGrid } from 'recharts'
 import { flattenDeep, sum } from 'lodash'
@@ -16,7 +17,7 @@ interface Props {
 
 function profileToRechartsData(profile: Profile): DataPoint[] {
     let minute = 0;
-    const expandedProfile = profile.map((stop: ProfileStop) => {
+    const expandedProfile = profile.stops.map((stop: ProfileStop) => {
         const points = []
         for (let i = 0; i < stop.t; i++) {
             points.push({ runtime: minute, depth: stop.d })
@@ -28,7 +29,7 @@ function profileToRechartsData(profile: Profile): DataPoint[] {
 }
 
 function getXTicks(fullProfile: Profile): number[] {
-    const runTime = sum(fullProfile.map((stop: ProfileStop) => stop.t))
+    const runTime = fullProfile.runtime
     const xTicks = [];
     for (let i = 0; i <= runTime; i += 10) {
         xTicks.push(i)
@@ -39,7 +40,7 @@ function getXTicks(fullProfile: Profile): number[] {
 const ProfileGraph = (props: Props) => {
     const fullProfile = props.diveProfile.concat(props.decoProfile)
     const data = profileToRechartsData(fullProfile)
-    const yTicks = fullProfile.map((stop: ProfileStop) => stop.d)
+    const yTicks = fullProfile.stops.map((stop: ProfileStop) => stop.d)
     const xTicks = getXTicks(fullProfile)
     return <LineChart width={750} height={500} data={data}>
         <CartesianGrid strokeDasharray="3 3" />

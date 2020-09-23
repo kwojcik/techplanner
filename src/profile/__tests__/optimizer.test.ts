@@ -1,12 +1,13 @@
 import { bestMix, bestDecoForProfile } from "../optimizer";
-import { Profile } from "../types";
+import Profile from "../profile";
+import { ProfileStop } from "../types";
 import "./helpers";
 import { toMatchDecoProfile } from "./helpers";
 
 declare global {
   namespace jest {
     interface Matchers<R> {
-      toMatchDecoProfile(expected: Profile): R;
+      toMatchDecoProfile(expected: ProfileStop[]): R;
     }
   }
 }
@@ -37,9 +38,9 @@ describe("bestMix", () => {
 });
 describe("bestDecoForProfile", () => {
   it("asd", () => {
-    const diveProfile: Profile = [{ d: 50, t: 100 }];
+    const diveProfile: Profile = new Profile([{ d: 50, t: 100 }]);
     const bestDeco = bestDecoForProfile(diveProfile, 2);
-    expect(bestDeco).toMatchDecoProfile([
+    expect(bestDeco.stops).toMatchDecoProfile([
       { d: 21, t: 5, g: { percentn2: 77, percenthe2: 0 } },
       { d: 18, t: 8, g: { percentn2: 44, percenthe2: 0 } },
       { d: 15, t: 10, g: { percentn2: 44, percenthe2: 0 } },

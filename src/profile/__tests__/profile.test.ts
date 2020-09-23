@@ -1,5 +1,6 @@
 import { depthToStopDepth, calculateDecoProfile } from "../profile";
-import { Profile, BreathingGas, ProfileStop } from "../types";
+import { BreathingGas, ProfileStop } from "../types";
+import Profile from '../profile'
 import Diver from "../diver";
 import { toMatchDecoProfile } from "./helpers";
 
@@ -14,13 +15,13 @@ expect.extend({
   toMatchDecoProfile
 });
 
-function genP(nums: number[]): Profile {
-  const p: Profile = [];
+function genP(nums: number[]): ProfileStop[] {
+  const p = new Profile();
   expect(nums.length % 2).toEqual(0);
   for (let i = 0; i < nums.length; i += 2) {
-    p.push({ d: nums[i], t: nums[i + 1] });
+    p.addStop({ d: nums[i], t: nums[i + 1] });
   }
-  return p;
+  return p.stops;
 }
 describe("profile", () => {
   describe("depthToStopDepth", () => {
@@ -40,14 +41,14 @@ describe("profile", () => {
   });
   describe("calculateDecoProfile", () => {
     function runTest(
-      diveProfile: Profile,
-      expectedDecoProfile: Profile,
+      diveProfile: ProfileStop[],
+      expectedDecoProfile: ProfileStop[],
       breathingGases: BreathingGas[]
     ) {
       const diver = new Diver(0.79, 0, breathingGases, { atm: 1.0, depth: 0 });
-      diver.expose(diveProfile);
+      diver.expose(new Profile(diveProfile));
       const calculatedDecoProfile = calculateDecoProfile(diver);
-      expect(calculatedDecoProfile).toMatchDecoProfile(expectedDecoProfile);
+      expect(calculatedDecoProfile.stops).toMatchDecoProfile(expectedDecoProfile);
     }
     describe("on air", () => {
       const gases = [{ percentn2: 79, percenthe2: 0 }];

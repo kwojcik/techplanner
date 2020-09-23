@@ -1,8 +1,8 @@
 import Diver from "./diver";
-import { Minute, CompartmentNumber, Depth, Profile } from "./types";
-import { calculateDecoProfile } from "./profile";
+import { Minute, CompartmentNumber, Depth } from "./types";
+import Profile, { calculateDecoProfile } from "./profile";
 
-const profile = [{ d: 21.1, t: 60 }];
+const profile = new Profile([{ d: 21.1, t: 60 }]);
 
 const diver = new Diver(0.75, 0, [
   {
@@ -10,6 +10,7 @@ const diver = new Diver(0.75, 0, [
     percenthe2: 2.36 / 3.11
   }
 ]);
+
 diver.expose(profile);
 
 const compartmentsToSimulate: CompartmentNumber[] = [4, 5, 6, 7];

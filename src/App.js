@@ -5,11 +5,11 @@ import Button from 'react-bootstrap/Button'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProfileGraph from './components/ProfileGraph'
 import Diver from "./profile/diver";
-import { calculateDecoProfile } from "./profile/profile";
+import Profile, { calculateDecoProfile } from "./profile/profile";
 
 function App() {
 
-  const profile = [{ d: 50, t: 50 }];
+  const profile = new Profile([{ d: 50, t: 50 }]);
 
   const diver = new Diver(0.79, 0, [
     { percentn2: 79, percenthe2: 0 }

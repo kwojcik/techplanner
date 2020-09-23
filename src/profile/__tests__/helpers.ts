@@ -1,9 +1,9 @@
-import { Profile } from "../types";
+import { ProfileStop } from "../types";
 describe("stop failing because there are no tests", () => {
-  it("please stop", () => {});
+  it("please stop", () => { });
 });
 
-export function toMatchDecoProfile(actual: Profile, expected: Profile) {
+export function toMatchDecoProfile(actual: ProfileStop[], expected: ProfileStop[]) {
   if (actual.length !== expected.length) {
     let tryModifiedProfile = false;
     // Do some tricky stuff. Sometimes someone wants to add a
@@ -29,8 +29,7 @@ export function toMatchDecoProfile(actual: Profile, expected: Profile) {
     if (!tryModifiedProfile) {
       return {
         message: () =>
-          `expected number of stops ${actual.length} to be ${
-            expected.length
+          `expected number of stops ${actual.length} to be ${expected.length
           }. Actual profile:${JSON.stringify(actual)}`,
         pass: false
       };
@@ -55,8 +54,7 @@ export function toMatchDecoProfile(actual: Profile, expected: Profile) {
     if (actual[i].d !== expected[i].d) {
       return {
         message: () =>
-          `expected stop ${i} depth ${actual[i].d} to be ${
-            expected[i].d
+          `expected stop ${i} depth ${actual[i].d} to be ${expected[i].d
           }. Actual profile:${JSON.stringify(actual)}`,
         pass: false
       };
@@ -66,8 +64,7 @@ export function toMatchDecoProfile(actual: Profile, expected: Profile) {
     ) {
       return {
         message: () =>
-          `expected stop ${i} time ${actual[i].t} to be within 10% of ${
-            expected[i].t
+          `expected stop ${i} time ${actual[i].t} to be within 10% of ${expected[i].t
           }. Actual profile:${JSON.stringify(actual)}`,
         pass: false
       };

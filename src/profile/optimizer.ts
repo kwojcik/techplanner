@@ -1,4 +1,5 @@
-import { Profile, BreathingGas, Pressure, Depth } from "./types";
+import { BreathingGas, Pressure, Depth } from "./types";
+import Profile from './profile'
 import { barMSW } from "./constantsZHL16c";
 import { max, sum } from "lodash";
 import { combinations } from "./utils";
@@ -40,19 +41,19 @@ export function bestDecoForProfile(
   if (options.bottomMix) {
     bottomMix = options.bottomMix
   } else {
-    const deepest = max(diveProfile.map(stop => stop.d)) || 0;
+    const deepest = max(diveProfile.stops.map(stop => stop.d)) || 0;
     bottomMix = bestMix(deepest, options.diveppo2);
   }
 
   const gasCombos: BreathingGas[][] = combinations(decoGasesToCheck, numGases);
-  let bestProfile: Profile = [];
+  let bestProfile: Profile = new Profile();
   let bestRuntime = 9999999999;
   gasCombos.forEach(gases => {
     gases = [bottomMix, ...gases] || gases;
     const diver = new Diver(0.79, 0, gases);
     diver.expose(diveProfile);
     const decoProfile = calculateDecoProfile(diver);
-    const runTime = sum(decoProfile.map(stop => stop.t));
+    const runTime = sum(decoProfile.stops.map(stop => stop.t));
     if (runTime < bestRuntime) {
       bestRuntime = runTime;
       bestProfile = decoProfile;

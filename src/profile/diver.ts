@@ -1,7 +1,8 @@
 import { max, min } from "lodash";
 import Compartment from "./compartment";
-import { Pressure, Profile, InspiredGas, BreathingGas, Depth } from "./types";
+import { Pressure, InspiredGas, BreathingGas, Depth } from "./types";
 import { barMSW, ATM } from "./constants";
+import Profile from './profile'
 
 export default class Diver {
   compartments: Compartment[] = [];
@@ -29,8 +30,8 @@ export default class Diver {
     this.depth = options.depth
   }
   expose(profile: Profile) {
-    for (let i = 0; i < profile.length; i++) {
-      const currentStep = profile[i];
+    for (let i = 0; i < profile.stops.length; i++) {
+      const currentStep = profile.stops[i];
       const gasAtPressure: InspiredGas = {
         pn2:
           (this.currentGas.percentn2 / 100.0) *

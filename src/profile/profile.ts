@@ -1,5 +1,26 @@
-import { Depth, Profile, Minute } from "./types";
+import { Depth, ProfileStop, Minute } from "./types";
 import Diver from "./diver";
+
+export default class Profile {
+  stops: ProfileStop[]
+  constructor(stops: ProfileStop[] = []) {
+    this.stops = stops
+  }
+
+  addStop(stop: ProfileStop) {
+    this.stops.push(stop)
+  }
+
+  concat(profile: Profile) {
+    return new Profile(this.stops.concat(profile.stops))
+  }
+
+  get runtime(): number {
+    let t = 0;
+    this.stops.forEach(stop => { t += stop.t })
+    return t
+  }
+}
 
 // Generate decompression profile
 const stopDepthDelta = 3;
@@ -19,17 +40,17 @@ function ascend(diver: Diver, destDepth: Depth) {
     return;
   }
 
-  const ascentProfile: Profile = [];
+  const ascentProfile = new Profile();
   let currentDepth = diver.depth;
   while (Math.abs(currentDepth - destDepth) > 0.0000001) {
     currentDepth -= timeDelta * ascentRate;
-    ascentProfile.push({ d: currentDepth, t: timeDelta });
+    ascentProfile.addStop({ d: currentDepth, t: timeDelta });
   }
   diver.expose(ascentProfile);
 }
 
 export function calculateDecoProfile(diver: Diver): Profile {
-  const decoProfile: Profile = [];
+  const decoProfile = new Profile();
   let currentStopTime: Minute = 0;
   let currentStopDepth: Depth = depthToStopDepth(diver.deepestToleratedDepth);
 
@@ -42,7 +63,7 @@ export function calculateDecoProfile(diver: Diver): Profile {
     diver.selectBestDecoGas();
 
     currentStopTime += 1;
-    diver.expose([{ d: currentStopDepth, t: 1 }]);
+    diver.expose(new Profile([{ d: currentStopDepth, t: 1 }]));
 
     const nextStopDepth = depthToStopDepth(diver.deepestToleratedDepth);
     if (nextStopDepth < currentStopDepth) {
@@ -52,7 +73,7 @@ export function calculateDecoProfile(diver: Diver): Profile {
         t: Math.round(currentStopTime),
         g: diver.currentGas
       };
-      decoProfile.push(stop);
+      decoProfile.addStop(stop);
       currentStopDepth = nextStopDepth;
       currentStopTime = 0;
     }
