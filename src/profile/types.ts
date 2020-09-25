@@ -6,9 +6,16 @@ export type Pressure = number;
 export type AValue = number;
 export type BValue = number;
 export type CompartmentNumber = number;
+export type Liter = number;
+export type Tank = {
+  gas: BreathingGas;
+  volume: Liter;
+  fullPressure: Pressure;
+  currentPressure: Pressure;
+}
 export type BreathingGas = {
-  percentn2: Pressure;
-  percenthe2: Pressure;
+  percentn2: number;
+  percenthe2: number;
 };
 export type InspiredGas = {
   pn2: Pressure;

@@ -6,10 +6,17 @@ const profile = new Profile([{ d: 21.1, t: 60 }]);
 
 const diver = new Diver(0.75, 0, [
   {
-    percentn2: 0.75 / 3.11,
-    percenthe2: 2.36 / 3.11
+    gas: {
+      percentn2: 0.75 / 3.11,
+      percenthe2: 2.36 / 3.11,
+    },
+    volume: 12,
+    fullPressure: 300,
+    currentPressure: 300,
   }
-]);
+],
+  5
+);
 
 diver.expose(profile);
 

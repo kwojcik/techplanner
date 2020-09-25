@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import { BreathingGas } from '../profile/types'
+import { Tank } from '../profile/types'
 import Table from 'react-bootstrap/Table'
 
 interface Props {
-    initialGases: BreathingGas[]
+    initialTanks: Tank[]
 }
 
-const GasList = (props: Props) => {
-    const [gases, setGases] = useState(props.initialGases)
-    if (!gases) {
+const TankList = (props: Props) => {
+    const [tanks, setTanks] = useState(props.initialTanks)
+    if (!tanks) {
         return null
     }
     return <Table striped bordered hover>
@@ -18,14 +18,14 @@ const GasList = (props: Props) => {
                 <th>Precent He2</th>
             </tr>
             <tbody>
-                {gases.map((gas) => (
+                {tanks.map((tank) => (
                     <tr>
-                        <td>{100 - gas.percentn2 - gas.percenthe2}</td>
-                        <td>{gas.percenthe2}</td>
+                        <td>{100 - tank.gas.percentn2 - tank.gas.percenthe2}</td>
+                        <td>{tank.gas.percenthe2}</td>
                     </tr>
                 ))}
             </tbody>
         </thead>
     </Table>
 }
-export default GasList
+export default TankList

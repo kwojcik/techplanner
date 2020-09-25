@@ -1,6 +1,6 @@
 import { max } from "lodash";
 import Compartment from "./compartment";
-import { Pressure, InspiredGas, BreathingGas, Depth, Minute } from "./types";
+import { Pressure, InspiredGas, BreathingGas, Depth, Minute, Tank } from "./types";
 import { barMSW, ATM } from "./constants";
 import Profile from './profile'
 
@@ -13,18 +13,20 @@ export type HistoryPoint = {
 
 export default class Diver {
   compartments: Compartment[] = [];
-  breathingGases: BreathingGas[];
-  selectedGas: number = 0; // What is the Integer type?
+  tanks: Tank[];
+  selectedTank: number = 0;
   atm: Pressure;
   depth: Depth;
   ppo2Deco: Pressure = 1.6;
   history: HistoryPoint[]
   runtime: number;
+  sac: number;
 
   constructor(
     pn2: Pressure,
     phe2: Pressure,
-    breathingGases: BreathingGas[],
+    tanks: Tank[],
+    sac: number,
     options: {
       // allow ambient pressure to be set for safety or altitude
       atm: Pressure,
@@ -34,8 +36,9 @@ export default class Diver {
     for (let i = 0; i < 16; i++) {
       this.compartments.push(new Compartment(pn2, phe2, i));
     }
-    this.breathingGases = breathingGases;
+    this.tanks = tanks
     this.atm = options.atm;
+    this.sac = sac;
     this.depth = options.depth
     this.history = [{ depth: this.depth, t: 0, ceiling: this.deepestToleratedDepth, gas: this.currentGas }]
     this.runtime = 0
@@ -71,7 +74,7 @@ export default class Diver {
   }
 
   get currentGas() {
-    return this.breathingGases[this.selectedGas];
+    return this.tanks[this.selectedTank].gas;
   }
   get deepestToleratedDepth(): Depth {
     const depths = this.compartments.map(c => c.depthTolerated(this.atm));
@@ -81,16 +84,16 @@ export default class Diver {
 
   selectBestDecoGas() {
     // TODO only works for nitrox
-    let minpn2 = this.breathingGases[0].percentn2;
-    for (let i = 0; i < this.breathingGases.length; i++) {
+    let minpn2 = this.tanks[0].gas.percentn2;
+    for (let i = 0; i < this.tanks.length; i++) {
       if (
-        this.breathingGases[i].percentn2 < minpn2 &&
-        (1.0 - this.breathingGases[i].percentn2 / 100.0) *
+        this.tanks[i].gas.percentn2 < minpn2 &&
+        (1.0 - this.tanks[i].gas.percentn2 / 100.0) *
         (this.depth * barMSW + 1) <=
         this.ppo2Deco
       ) {
-        this.selectedGas = i;
-        minpn2 = this.breathingGases[i].percentn2;
+        this.selectedTank = i;
+        minpn2 = this.tanks[i].gas.percentn2;
       }
     }
   }

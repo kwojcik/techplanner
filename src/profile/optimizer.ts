@@ -50,7 +50,8 @@ export function bestDecoForProfile(
   let bestRuntime = 9999999999;
   gasCombos.forEach(gases => {
     gases = [bottomMix, ...gases] || gases;
-    const diver = new Diver(0.79, 0, gases);
+    const tanks = gases.map(gas => ({ gas: gas, volume: 100, fullPressure: 300, currentPressure: 300 }))
+    const diver = new Diver(0.79, 0, tanks, 5);
     diver.expose(diveProfile);
     const decoProfile = calculateDecoProfile(diver);
     const runTime = sum(decoProfile.stops.map(stop => stop.t));

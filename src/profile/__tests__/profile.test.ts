@@ -45,7 +45,8 @@ describe("profile", () => {
       expectedDecoProfile: ProfileStop[],
       breathingGases: BreathingGas[]
     ) {
-      const diver = new Diver(0.79, 0, breathingGases, { atm: 1.0, depth: 0 });
+      const tanks = breathingGases.map(gas => ({ gas: gas, volume: 12, fullPressure: 300, currentPressure: 300 }))
+      const diver = new Diver(0.79, 0, tanks, 5, { atm: 1.0, depth: 0 });
       diver.expose(new Profile(diveProfile));
       const calculatedDecoProfile = calculateDecoProfile(diver);
       expect(calculatedDecoProfile.stops).toMatchDecoProfile(expectedDecoProfile);
