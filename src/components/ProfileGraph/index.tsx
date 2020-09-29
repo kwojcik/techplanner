@@ -38,7 +38,6 @@ function diverToRechartsData(diver: Diver): DataPoint[] {
     for (let t = 0; t <= diver.runtime; t++) {
         const h = diver.getHistoryAt(t)
         let dataPoint: DataPoint = { runtime: t, depth: h.depth, ceiling: h.ceiling, gas: h.tanks[h.selectedTank].gas }
-        console.log(h.tanks)
         h.tanks.forEach((tank: Tank, i: number) => {
             // @ts-ignore
             dataPoint[`tank${i}`] = tank.currentPressure / tank.fullPressure * 100.0
