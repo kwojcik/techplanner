@@ -1,4 +1,4 @@
-import { max } from "lodash";
+import { max, cloneDeep } from "lodash";
 import Compartment from "./compartment";
 import { Pressure, InspiredGas, BreathingGas, Depth, Minute, Tank } from "./types";
 import { barMSW, ATM } from "./constants";
@@ -8,7 +8,8 @@ export type HistoryPoint = {
   depth: Depth;
   t: Minute;
   ceiling: Depth;
-  gas: BreathingGas
+  selectedTank: number;
+  tanks: Tank[];
 }
 
 export default class Diver {
@@ -40,7 +41,7 @@ export default class Diver {
     this.atm = options.atm;
     this.sac = sac;
     this.depth = options.depth
-    this.history = [{ depth: this.depth, t: 0, ceiling: this.deepestToleratedDepth, gas: this.currentGas }]
+    this.history = [{ depth: this.depth, t: 0, ceiling: this.deepestToleratedDepth, tanks: cloneDeep(this.tanks), selectedTank: this.selectedTank }]
     this.runtime = 0
   }
   expose(profile: Profile) {
@@ -48,18 +49,30 @@ export default class Diver {
       const currentStep = profile.stops[i];
       for (let minuteOfStop = 0; minuteOfStop < currentStep.t; minuteOfStop++) {
         const timeAtStep = (currentStep.t < 1 || currentStep.t - minuteOfStop < 0) ? currentStep.t : 1
+        const pAmb = currentStep.d * barMSW + this.atm
         const gasAtPressure: InspiredGas = {
           pn2:
-            (this.currentGas.percentn2 / 100.0) *
-            (currentStep.d * barMSW + this.atm),
+            (this.currentGas.percentn2 / 100.0) * pAmb,
           phe2:
-            (this.currentGas.percenthe2 / 100.0) *
-            (currentStep.d * barMSW + this.atm)
+            (this.currentGas.percenthe2 / 100.0) * pAmb,
         };
         this.compartments.forEach(c => c.expose(gasAtPressure, timeAtStep));
+
+        // Calculate how much Bar worth of gas was consumed
+        const consumedGas = this.sac * pAmb * timeAtStep; // L/min * Bar * min => L*Bar
+        const consumedGasPressure = consumedGas / this.tanks[this.selectedTank].volume // L*Bar / L => Bar
+        this.tanks[this.selectedTank].currentPressure -= consumedGasPressure
+
         this.depth = currentStep.d;
         this.runtime += timeAtStep
-        this.history.push({ depth: this.depth, t: this.runtime, ceiling: this.deepestToleratedDepth, gas: this.currentGas })
+        this.history.push(
+          {
+            depth: this.depth,
+            t: this.runtime,
+            ceiling: this.deepestToleratedDepth,
+            selectedTank: this.selectedTank,
+            tanks: cloneDeep(this.tanks)
+          })
       }
     }
   }

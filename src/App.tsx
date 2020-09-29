@@ -9,8 +9,8 @@ import Profile, { calculateDecoProfile } from "./profile/profile";
 
 function App() {
 
-  const profile = new Profile([{ d: 25, t: 25 }, { d: 50, t: 25 }]);
-  const gases: BreathingGas[] = [{ percentn2: 79, percenthe2: 0 }, { percentn2: 50, percenthe2: 0 }, { percentn2: 20, percenthe2: 0 }]
+  const profile = new Profile([{ d: 50, t: 26 }]);
+  const gases: BreathingGas[] = [{ percentn2: 77, percenthe2: 0 }, { percentn2: 27, percenthe2: 0 }]
   const tanks = gases.map(gas => ({ gas: gas, volume: 12, fullPressure: 300, currentPressure: 300 }))
   const diver = new Diver(0.79, 0, tanks, 5)
   diver.expose(profile);
