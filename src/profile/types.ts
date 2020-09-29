@@ -22,4 +22,3 @@ export type InspiredGas = {
   phe2: Pressure;
 };
 export type ProfileStop = { d: Depth; t: Minute; g?: BreathingGas };
-export type Profile = ProfileStop[];

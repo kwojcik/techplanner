@@ -10,6 +10,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import cloneDeep from 'lodash/cloneDeep'
 import ProfileTextual from './components/ProfileTextual';
+import ProfileCreator from './components/ProfileCreator';
 
 
 function App() {
@@ -38,10 +39,13 @@ function App() {
     <div className="App" >
       <ProfileGraph diver={diver} diveProfile={profile} decoProfile={decoProfile} />
       <Row>
-        <Col xs={3}>
+        <Col xs={4}>
           <TankList tanks={diver.tanks} onChange={(tanks) => setTanks(tanks)} />
         </Col>
-        <Col xs={3}>
+        <Col xs={4}>
+          <ProfileCreator profile={profile} onChange={(p: Profile) => setProfile(p)} />
+        </Col>
+        <Col xs={4}>
           <ProfileTextual diver={diver} diveProfile={profile} decoProfile={decoProfile} />
         </Col>
       </Row>
