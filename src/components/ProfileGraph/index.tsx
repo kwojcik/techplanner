@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BreathingGas, ProfileStop, Tank } from '../../profile/types'
 import Profile from '../../profile/profile'
 import Diver from '../../profile/diver'
@@ -38,6 +38,7 @@ function diverToRechartsData(diver: Diver): DataPoint[] {
     for (let t = 0; t <= diver.runtime; t++) {
         const h = diver.getHistoryAt(t)
         let dataPoint: DataPoint = { runtime: t, depth: h.depth, ceiling: h.ceiling, gas: h.tanks[h.selectedTank].gas }
+        console.log(h.tanks)
         h.tanks.forEach((tank: Tank, i: number) => {
             // @ts-ignore
             dataPoint[`tank${i}`] = tank.currentPressure / tank.fullPressure * 100.0
@@ -85,9 +86,13 @@ const ProfileGraph = (props: Props) => {
     }).filter(e => e)
 
 
-    const [selectedSeries, setSelectedSeries] = useState(Object.keys(data[0])
+    const existingSeries = Object.keys(data[0])
         .filter(seriesName => seriesName !== 'gas' && seriesName !== 'runtime')
-        .map(seriesName => ({ name: seriesName, enabled: true })))
+        .map(seriesName => ({ name: seriesName, enabled: true }))
+    const [selectedSeries, setSelectedSeries] = useState(existingSeries)
+    useEffect(() => {
+        setSelectedSeries(existingSeries)
+    }, props.diver.tanks)
 
     const tankLines = props.diver.tanks.map((_, i) =>
         showSeries(selectedSeries, `tank${i}`) && <Line yAxisId='right' type="monotone" dataKey={`tank${i}`} stroke="black" dot={false} isAnimationActive={false} />
