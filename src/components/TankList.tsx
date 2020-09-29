@@ -17,15 +17,15 @@ const TankList = (props: Props) => {
                 <th>Percent O2</th>
                 <th>Precent He2</th>
             </tr>
-            <tbody>
-                {tanks.map((tank) => (
-                    <tr>
-                        <td>{100 - tank.gas.percentn2 - tank.gas.percenthe2}</td>
-                        <td>{tank.gas.percenthe2}</td>
-                    </tr>
-                ))}
-            </tbody>
         </thead>
+        <tbody>
+            {tanks.map((tank) => (
+                <tr>
+                    <td>{100 - tank.gas.percentn2 - tank.gas.percenthe2}</td>
+                    <td>{tank.gas.percenthe2}</td>
+                </tr>
+            ))}
+        </tbody>
     </Table>
 }
 export default TankList

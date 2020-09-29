@@ -6,6 +6,8 @@ import TankList from './components/TankList'
 import Diver from "./profile/diver";
 import { BreathingGas } from "./profile/types"
 import Profile, { calculateDecoProfile } from "./profile/profile";
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 function App() {
 
@@ -19,7 +21,11 @@ function App() {
   return (
     <div className="App" >
       <ProfileGraph diver={diver} diveProfile={profile} decoProfile={decoProfile} />
-      < TankList initialTanks={diver.tanks} />
+      <Row>
+        <Col xs={3}>
+          <TankList initialTanks={diver.tanks} />
+        </Col>
+      </Row>
     </div>
   );
 }
