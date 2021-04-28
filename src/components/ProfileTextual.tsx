@@ -25,7 +25,7 @@ const ProfileTextual = (props: Props) => {
         }
         <b>Total Runtime </b>{`${Math.ceil(props.diver.runtime)}min`}
         <h6>Tanks</h6>
-        {props.diver.tanks.map((tank, i) => (<>{`tank${i} ${Math.round(tank.currentPressure / tank.fullPressure * 100.0)}% full`}<br /></>))}
+        {props.diver.tanks.map((tank, i) => (<>{`tank${i} ${Math.round(tank.currentPressure / tank.fullPressure * 100.0)}%full ${Math.round((tank.fullPressure - tank.currentPressure) * tank.volume)}ltr used`} <br /></>))}
     </>
 }
 

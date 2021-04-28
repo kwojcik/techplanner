@@ -52,7 +52,7 @@ const TankList = (props: Props) => {
                             <td>{`tank${i}`}</td>
                             <td>
                                 <Form.Group controlId={`tank${i}n2`} onBlur={(e: any) => {
-                                    updateTanks(i, { percento2: 100 - e.target.value - tank.gas.percenthe2 })
+                                    updateTanks(i, { percento2: e.target.value })
                                 }}>
                                     <Form.Control
                                         required
