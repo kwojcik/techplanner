@@ -1,4 +1,3 @@
-import { assert } from "console";
 import { Pressure, HalfTime, AValue, BValue, Minute } from "./types";
 export const pwater: Pressure = 0.063;
 //export const barMSW: Pressure = 0.100693064;
@@ -135,7 +134,9 @@ export function getCnsO2TimeLimit(p: Pressure): Minute {
   if (p < .6) {
     return Infinity
   }
-  assert(p <= 1.6)
+  if (p > 1.6) {
+    throw `not implemented ${p}`
+  }
 
   // find the lower bound
   let lowerBound = 0;

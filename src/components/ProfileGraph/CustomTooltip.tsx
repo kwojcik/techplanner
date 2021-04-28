@@ -16,6 +16,7 @@ const CustomTooltip = ({ active, payload, label }: { active: boolean; payload: {
             <p className="recharts-tooltip-label">{`Runtime: ${label}min`}</p>
             <p className="recharts-tooltip-label">{`Depth: ${payload[0].payload.depth}m`}</p>
             <p className="recharts-tooltip-label">{`Ceiling: ${payload[0].payload.ceiling}m`}</p>
+            <p className="recharts-tooltip-label">{`cnso2: ${Math.ceil(payload[0].payload.cnso2)}%`}</p>
             <p className="recharts-tooltip-label">{`Gas: o2: ${100 - payload[0].payload.gas.percentn2 - payload[0].payload.gas.percenthe2}% he2: ${payload[0].payload.gas.percenthe2}%`}</p>
             {/*sigh*/}
             {payload[0].payload.tank0 && <p className="recharts-tooltip-label">{`Tank0: ${Math.round(payload[0].payload.tank0)}%`}</p>}

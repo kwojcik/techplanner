@@ -1,7 +1,7 @@
 import { max, cloneDeep } from "lodash";
 import Compartment from "./compartment";
 import { Pressure, InspiredGas, BreathingGas, Depth, Minute, Tank } from "./types";
-import { barMSW, ATM } from "./constants";
+import { barMSW, ATM, getCnsO2TimeLimit } from "./constants";
 import Profile from './profile'
 
 export type HistoryPoint = {
@@ -10,6 +10,7 @@ export type HistoryPoint = {
   ceiling: Depth;
   selectedTank: number;
   tanks: Tank[];
+  cnso2: number;
 }
 
 export default class Diver {
@@ -22,6 +23,7 @@ export default class Diver {
   history: HistoryPoint[]
   runtime: number;
   sac: number;
+  cnso2: number;
 
   constructor(
     pn2: Pressure,
@@ -32,7 +34,8 @@ export default class Diver {
       // allow ambient pressure to be set for safety or altitude
       atm: Pressure,
       depth: Depth,
-    } = { atm: ATM, depth: 0 }
+      cnso2: number,
+    } = { atm: ATM, depth: 0, cnso2: 0 }
   ) {
     for (let i = 0; i < 16; i++) {
       this.compartments.push(new Compartment(pn2, phe2, i));
@@ -41,10 +44,12 @@ export default class Diver {
     this.atm = options.atm;
     this.sac = sac;
     this.depth = options.depth
-    this.history = [{ depth: this.depth, t: 0, ceiling: this.deepestToleratedDepth, tanks: cloneDeep(this.tanks), selectedTank: this.selectedTank }]
+    this.cnso2 = options.cnso2
+    this.history = [{ depth: this.depth, t: 0, ceiling: this.deepestToleratedDepth, tanks: cloneDeep(this.tanks), selectedTank: this.selectedTank, cnso2: this.cnso2 }]
     this.runtime = 0
   }
   expose(profile: Profile) {
+    console.log(profile)
     for (let i = 0; i < profile.stops.length; i++) {
       const currentStep = profile.stops[i];
       for (let minuteOfStop = 0; minuteOfStop < currentStep.t; minuteOfStop++) {
@@ -65,13 +70,22 @@ export default class Diver {
 
         this.depth = currentStep.d;
         this.runtime += timeAtStep
+
+        // update cnso2
+        const currentGasPercentO2 = 100 - this.currentGas.percenthe2 - this.currentGas.percentn2
+        const currentGasPPO2 = currentGasPercentO2 / 100.0 * pAmb
+        console.log('current', this.currentGas, 'depth', this.depth, 'pamb', pAmb, 'currentppo2', currentGasPPO2, 'time', timeAtStep)
+        const percentExposed = timeAtStep / getCnsO2TimeLimit(currentGasPPO2) * 100
+        this.cnso2 += percentExposed
+
         this.history.push(
           {
             depth: this.depth,
             t: this.runtime,
             ceiling: this.deepestToleratedDepth,
             selectedTank: this.selectedTank,
-            tanks: cloneDeep(this.tanks)
+            tanks: cloneDeep(this.tanks),
+            cnso2: this.cnso2
           })
       }
     }

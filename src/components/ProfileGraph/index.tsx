@@ -13,6 +13,7 @@ export type DataPoint = {
     depth: number
     ceiling: number
     gas: BreathingGas
+    cnso2: number
     // how
     tank0?: number;
     tank1?: number;
@@ -36,7 +37,7 @@ function diverToRechartsData(diver: Diver): DataPoint[] {
     const d = []
     for (let t = 0; t <= diver.runtime; t++) {
         const h = diver.getHistoryAt(t)
-        let dataPoint: DataPoint = { runtime: t, depth: h.depth, ceiling: h.ceiling, gas: h.tanks[h.selectedTank].gas }
+        let dataPoint: DataPoint = { runtime: t, depth: h.depth, ceiling: h.ceiling, gas: h.tanks[h.selectedTank].gas, cnso2: h.cnso2 }
         h.tanks.forEach((tank: Tank, i: number) => {
             // @ts-ignore
             dataPoint[`tank${i}`] = tank.currentPressure / tank.fullPressure * 100.0
@@ -107,6 +108,7 @@ const ProfileGraph = (props: Props) => {
                 <Legend />
                 {showSeries(selectedSeries, "depth") && <Line yAxisId='left' type="monotone" dataKey="depth" stroke="#8884d8" dot={false} isAnimationActive={false} />}
                 {showSeries(selectedSeries, "ceiling") && <Line yAxisId='left' type="monotone" dataKey="ceiling" stroke="red" dot={false} isAnimationActive={false} />}
+                {showSeries(selectedSeries, 'cnso2') && <Line yAxisId='right' type="monotone" dataKey="cnso2" stroke="orange" dot={false} isAnimationActive={false} />}
                 {hasDeco && <ReferenceArea yAxisId="left" x1={decoBeginRuntime} x2={decoEndRuntime - 1} label="Deco" fill="yellow" opacity={0.2} />}
                 {switches}
                 {tankLines}
