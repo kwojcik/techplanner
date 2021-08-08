@@ -15,7 +15,6 @@ expect.extend({
   toMatchDecoProfile
 });
 describe("optimizer", () => {
-
   describe("bestMix", () => {
     it("chooses oxy above 6m", () => {
       for (let i = 1; i < 6; i++) {
@@ -37,8 +36,8 @@ describe("optimizer", () => {
       expect(bestMix(60, 1.4)).toEqual({ percentn2: 80, percenthe2: 0 });
     });
   });
-  describe.only("bestDecoForProfile", () => {
-    it("asd", () => {
+  describe("bestDecoForProfile", () => {
+    it("chooses the right gas", () => {
       const diveProfile: Profile = new Profile([{ d: 50, t: 100 }]);
       const bestDeco = bestDecoForProfile(diveProfile, 2);
       expect(bestDeco.stops).toMatchDecoProfile([

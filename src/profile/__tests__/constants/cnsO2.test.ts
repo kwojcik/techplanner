@@ -1,4 +1,4 @@
-import { cnso2Table, getCnsO2TimeLimit } from '../constants'
+import { cnso2Table, getCnsO2TimeLimit } from '../../constants/cnsO2'
 
 describe('getCnsO2TimeLimit', () => {
     it('gives infinity below 0.6', () => {

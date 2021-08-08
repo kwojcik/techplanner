@@ -1,6 +1,6 @@
 import { BreathingGas, Pressure, Depth } from "./types";
 import Profile from './profile'
-import { barMSW } from "./constantsZHL16c";
+import { barMSW } from "./constants";
 import { max, sum } from "lodash";
 import { combinations } from "./utils";
 import Diver from "./diver";

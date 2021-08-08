@@ -34,7 +34,7 @@ export function depthToStopDepth(depth: Depth): Depth {
 }
 
 const timeDelta = 1.0 / 60; // 1 second
-const ascentRate = 10; // 10 meters/min
+const ascentRate = 10.0; // 10 meters/min
 function ascend(diver: Diver, destDepth: Depth) {
   if (diver.depth === destDepth) {
     return;

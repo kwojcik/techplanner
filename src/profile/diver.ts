@@ -1,7 +1,8 @@
 import { max, cloneDeep } from "lodash";
 import Compartment from "./compartment";
 import { Pressure, InspiredGas, BreathingGas, Depth, Minute, Tank } from "./types";
-import { barMSW, ATM, getCnsO2TimeLimit } from "./constants";
+import { barMSW, ATM } from "./constants";
+import { getCnsO2TimeLimit } from "./constants/cnsO2"
 import Profile from './profile'
 
 export type HistoryPoint = {
@@ -49,7 +50,7 @@ export default class Diver {
     this.runtime = 0
   }
   expose(profile: Profile) {
-    console.log(profile)
+    //console.log(profile)
     for (let i = 0; i < profile.stops.length; i++) {
       const currentStep = profile.stops[i];
       for (let minuteOfStop = 0; minuteOfStop < currentStep.t; minuteOfStop++) {
@@ -74,7 +75,7 @@ export default class Diver {
         // update cnso2
         const currentGasPercentO2 = 100 - this.currentGas.percenthe2 - this.currentGas.percentn2
         const currentGasPPO2 = currentGasPercentO2 / 100.0 * pAmb
-        console.log('current', this.currentGas, 'depth', this.depth, 'pamb', pAmb, 'currentppo2', currentGasPPO2, 'time', timeAtStep)
+        //console.log('current', this.currentGas, 'depth', this.depth, 'pamb', pAmb, 'currentppo2', currentGasPPO2, 'time', timeAtStep)
         const percentExposed = timeAtStep / getCnsO2TimeLimit(currentGasPPO2) * 100
         this.cnso2 += percentExposed
 

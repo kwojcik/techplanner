@@ -9,18 +9,11 @@ import {
   Depth
 } from "./types";
 import {
-  //  n2As,
-  //  he2As,
-  //  n2Bs,
-  //  he2Bs,
-  //  n2HTs,
-  //  he2HTs,
   getA,
   getB,
-  pwater,
-  barMSW
-} from "./constantsZHL16c";
-import { n2HTs } from "./constants";
+} from "./constants/zhl16c";
+import { pwater, barMSW } from './constants'
+import { n2HTs } from "./constants/zhl16a";
 
 function calcPIGT({
   pigtt0,

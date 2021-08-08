@@ -1,12 +1,10 @@
-import { Pressure, CompartmentNumber } from "./types";
-export const pwater: Pressure = 0.063;
-//export const barMSW: Pressure = 0.100693064;
-export const barMSW: Pressure = 0.1;
-export const ATM: Pressure = 1.0;
+import { Pressure, CompartmentNumber } from "../types";
+import { barMSW } from './'
 
+// TODO: I don't know where I got these numbers from; find a reputable source
 const n2DMs = [
   1.9082,
-  // wtf is compartment 1b 1.7928,
+  // 1.7928, compartment 1b?
   1.5352,
   1.3847,
   1.278,
@@ -26,7 +24,7 @@ const n2DMs = [
 
 const n2M0s = [
   32.4,
-  // 29.6,
+  // 29.6, compartment 1b?
   25.4,
   22.5,
   20.3,
