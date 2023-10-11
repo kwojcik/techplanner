@@ -1,3 +1,8 @@
+# Techplanner
+A unfinished toy project implementing the ZHL-16 decompression algorithm and a rudimentary React UI. Includes a cool feature to automatically calculate your best deco gases based on your bottom profile and number of gases.
+
+Do not use in real life, no guarantees of correctness or that you won't get bent or OXTOX and die.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

@@ -30,9 +30,5 @@ for (let i = 0; i < compartmentsToSimulate.length; i++) {
   pats.push(c.pat);
   pigts.push(c.pigt);
 }
-//console.log(pigtpartials);
-//console.log(pigts);
-//console.log(pats);
 
 const decoProfile = calculateDecoProfile(diver);
-//console.log(decoProfile);

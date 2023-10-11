@@ -50,14 +50,6 @@ export default class Compartment {
       t: t,
       ht: n2HTs[this.num]
     });
-    /*
-    this.phe2 = calcPIGT({
-      pigtt0: this.phe2,
-      piig: gas.phe2 + pwater,
-      t: t,
-      ht: he2HTs[this.num]
-    });
-    */
   }
 
   get pigt(): Pressure {
@@ -68,13 +60,13 @@ export default class Compartment {
   }
   get a(): AValue {
     return (
-      /*this.phe2 * he2As[this.num] +*/ (this.pn2 * getA(this.num)) /
+      (this.pn2 * getA(this.num)) /
       (this.phe2 + this.pn2)
     );
   }
   get b(): BValue {
     return (
-      /*this.phe2 * he2Bs[this.num] +*/ (this.pn2 * getB(this.num)) /
+      (this.pn2 * getB(this.num)) /
       (this.phe2 + this.pn2)
     );
   }

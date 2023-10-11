@@ -48,7 +48,6 @@ describe("profile", () => {
     ) {
       const tanks = breathingGases.map(gas => ({ gas: gas, volume: 12, fullPressure: 300, currentPressure: 300 }))
       const diver = new Diver(0.79, 0, tanks, 5, { atm: 1.0, depth: 0, cnso2: 0 });
-      //console.log('test expose', diveProfile)
       diver.expose(new Profile(diveProfile));
       const calculatedDecoProfile = calculateDecoProfile(diver);
       if (expectedCnsO2 !== null) {
